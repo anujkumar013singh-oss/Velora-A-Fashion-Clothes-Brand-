@@ -1,39 +1,41 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import ProductCard from "@/components/ui/ProductCard";
 
-const collections = [
-  { id: "summer", name: "Summer Edit", subtext: "Lightweight & Breathable", image: "/images/summer.jpg" },
-  { id: "party", name: "Partywear", subtext: "Statement pieces", image: "/images/party.jpg" },
-  { id: "work", name: "Workwear", subtext: "Modern Professional", image: "/images/work.jpg" },
+// STATIC DATA - This will never crash on Vercel
+const featuredProducts = [
+  { id: "1", name: "Classic Black Hoodie", price: 89.00, category: "Outerwear", image: "hoodie-black.jpg", tags: "New" },
+  { id: "2", name: "Tailored Blazer", price: 159.00, category: "Outerwear", image: "blazer-black.jpg", tags: "Premium" },
+  { id: "3", name: "Luxe Silk Gown", price: 299.00, category: "Partywear", image: "dress-1.jpg", tags: "Special" },
+  { id: "4", name: "Premium Wool Coat", price: 450.00, category: "Outerwear", image: "coat-1.jpg", tags: "Winter" }
 ];
 
-export default function CollectionsPage() {
+export default function HomePage() {
   return (
-    <div className="pt-32 pb-20 container mx-auto px-4">
-      <div className="max-w-2xl mb-16 space-y-4">
-        <h1 className="text-4xl md:text-5xl font-serif font-bold uppercase tracking-tighter">Collections</h1>
-        <p className="text-gray-500 max-w-lg">Explore our curated edits designed to inspire.</p>
-      </div>
-      
-      <div className="space-y-32">
-        {collections.map((col) => (
-          <div key={col.id} className="flex flex-col lg:flex-row gap-12 items-center">
-            <div className="w-full lg:w-1/2 aspect-[4/5] bg-gray-100 overflow-hidden">
-               <img src={col.image} alt={col.name} className="w-full h-full object-cover" />
-            </div>
-            <div className="w-full lg:w-1/2 space-y-6">
-              <h2 className="text-3xl font-serif italic">{col.name}</h2>
-              <p className="text-gray-600">{col.subtext}</p>
-              {/* Note: I removed the Link to prevent further crashes */}
-              <div className="inline-flex items-center text-xs font-bold uppercase tracking-widest border-b border-black pb-1">
-                Explore Collection <ArrowRight size={14} className="ml-2" />
-              </div>
-            </div>
+    <main className="min-h-screen">
+      {/* Hero Section */}
+      <section className="h-[70vh] bg-gray-50 flex items-center justify-center border-b border-gray-100">
+        <div className="text-center space-y-4">
+          <h1 className="text-7xl font-serif italic tracking-tighter text-velora-black">VELORA</h1>
+          <p className="text-xs uppercase tracking-[0.3em] text-gray-500">Modern Luxury Fashion</p>
+        </div>
+      </section>
+
+      {/* Featured Collection Section */}
+      <section className="py-24 container mx-auto px-4">
+        <div className="flex justify-between items-end mb-12">
+          <div>
+            <h2 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-2">Editor's Choice</h2>
+            <h3 className="text-3xl font-serif italic">Featured Collection</h3>
           </div>
-        ))}
-      </div>
-    </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {featuredProducts.map((product) => (
+            <ProductCard key={product.id} {...product} />
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }
