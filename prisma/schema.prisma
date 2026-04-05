@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Product {
+  id           String      @id @default(uuid())
+  name         String
+  price        Float
+  description  String
+  images       String
+  category     String
+  tags         String
+  rating       Float       @default(4.5)
+  reviews      Int         @default(0)
+  createdAt    DateTime    @default(now())
+  collectionId String?
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+}
+
+model Collection {
+  id       String    @id @default(uuid())
+  name     String
+  slug     String    @unique @default(cuid())
+  subtext  String
+  image    String
+  products Product[]
+}
+
+model LearningModule {
+  id          String @id @default(uuid())
+  title       String
+  description String
+  category    String
+  image       String
+}
