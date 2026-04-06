@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import ProductGrid from "@/components/product/ProductGrid";
 import { getProductImage } from "@/lib/image-mapping";
 
@@ -27,7 +28,9 @@ export default function CollectionDetailPage() {
           </div>
         </div>
       </div>
-      <ProductGrid products={collection.products} />
+      <Suspense fallback={<div className="min-h-[240px]" aria-hidden />}>
+        <ProductGrid products={collection.products} />
+      </Suspense>
     </div>
   );
 }

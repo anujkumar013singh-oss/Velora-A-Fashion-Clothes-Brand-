@@ -1,47 +1,68 @@
 "use client";
 
-import ProductCard from "@/components/ui/ProductCard";
+import Link from "next/link";
+import { getProductImage } from "@/lib/image-mapping";
 
-// This is your static data that won't crash on Vercel
-const products = [
-  {
-    id: "1",
-    name: "Classic Black Hoodie",
-    price: 89.00,
-    category: "Outerwear",
-    image: "hoodie-black.jpg",
-    tags: "New Arrival",
-    description: "Premium cotton oversized hoodie"
-  },
-  {
-    id: "2",
-    name: "Tailored Blazer",
-    price: 159.00,
-    category: "Outerwear",
-    image: "blazer-black.jpg",
-    tags: "Premium",
-    description: "Modern fit black blazer"
-  },
-  {
-    id: "3",
-    name: "Silk V-Neck T-Shirt",
-    price: 45.00,
-    category: "Tops",
-    image: "vneck-black.jpg",
-    discount: 10,
-    description: "Soft touch luxury cotton blend"
-  }
-];
+export interface ProductCardProps {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  category: string;
+  tags: string;
+  description?: string;
+  discount?: number;
+}
 
-export default function ProductsPage() {
+export default function ProductCard({
+  id,
+  name,
+  price,
+  image,
+  category,
+  tags,
+  discount,
+}: ProductCardProps) {
+  const imgSrc = getProductImage(name, image);
+  const showTrending = tags?.includes("Trending");
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8 uppercase tracking-widest text-center">Our Collection</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {products.map((product) => (
-          <ProductCard key={product.id} {...product} />
-        ))}
+    <Link href={`/product/${id}`} className="group block">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-sm bg-gray-100 mb-4">
+        <img
+          src={imgSrc}
+          alt={name}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        {discount != null && discount > 0 && (
+          <span className="absolute top-3 left-3 bg-velora-wine text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1">
+            {discount}% Off
+          </span>
+        )}
+        {showTrending && (
+          <span className="absolute top-3 right-3 bg-white/90 text-velora-black text-[10px] font-bold uppercase tracking-wider px-2 py-1">
+            Trending
+          </span>
+        )}
       </div>
-    </div>
+      <div className="space-y-1 text-center md:text-left">
+        <p className="text-xs text-gray-500 uppercase tracking-widest">{category}</p>
+        <h3 className="font-serif text-lg font-medium text-velora-black group-hover:text-velora-wine transition-colors line-clamp-2">
+          {name}
+        </h3>
+        <p className="text-sm font-medium text-velora-black">
+          {discount != null && discount > 0 ? (
+            <>
+              <span className="text-gray-400 line-through mr-2">
+                ${price.toFixed(2)}
+              </span>
+              <span>${(price * (1 - discount / 100)).toFixed(2)}</span>
+            </>
+          ) : (
+            <>${price.toFixed(2)}</>
+          )}
+        </p>
+      </div>
+    </Link>
   );
 }
