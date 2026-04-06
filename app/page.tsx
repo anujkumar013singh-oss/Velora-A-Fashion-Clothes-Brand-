@@ -129,7 +129,7 @@ export default async function Home() {
         <h2 className="text-3xl font-serif font-bold mb-12 text-center">Our Collections</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {collections.map((collection) => (
-            <Link key={collection.id} href={`/collections/${(collection as any).slug || collection.id}`} className="block">
+            <div key={collection.id} className="block">
               <div className="group relative aspect-square md:aspect-[16/9] overflow-hidden rounded-sm cursor-pointer">
                 <img
                   src={getProductImage(collection.name, collection.image)}
@@ -146,7 +146,7 @@ export default async function Home() {
                   </p>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </section>
