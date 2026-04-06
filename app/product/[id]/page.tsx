@@ -1,9 +1,11 @@
+import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getProductImage } from "@/lib/image-mapping";
-import { Button } from "@/components/ui/Button";
 import ProductCard from "@/components/ui/ProductCard";
 import AddToCartSection from "@/components/product/AddToCartSection";
-import { Star, Truck, ShieldCheck, ArrowRight } from "lucide-react";
+import { Star, Truck, ShieldCheck } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 async function getProduct(id: string) {
   return await prisma.product.findUnique({
@@ -13,35 +15,47 @@ async function getProduct(id: string) {
 
 async function getRelatedProducts(category: string, currentId: string) {
   return await prisma.product.findMany({
-    where: { 
-      category, 
-      id: { not: currentId } 
+    where: {
+      category,
+      id: { not: currentId },
     },
     take: 4,
   });
 }
 
 export default async function ProductDetailPage({ params }: { params: { id: string } }) {
-  const product = await getProduct(params.id);
+  let product;
+  let relatedProducts: Awaited<ReturnType<typeof getRelatedProducts>> = [];
 
-  if (!product) {
-    return <div className="pt-32 text-center">Product not found</div>;
+  try {
+    product = await getProduct(params.id);
+  } catch {
+    notFound();
   }
 
-  const relatedProducts = await getRelatedProducts(product.category, product.id);
-  const images = product.images.split(',');
+  if (!product) {
+    notFound();
+  }
+
+  try {
+    relatedProducts = await getRelatedProducts(product.category, product.id);
+  } catch {
+    relatedProducts = [];
+  }
+
+  const images = product.images.split(",");
 
   return (
-    <div className="pt-24 pb-20 container mx-auto px-6">
+    <div className="w-full min-w-0 max-w-full pt-24 pb-20 container mx-auto px-4 sm:px-6">
       {/* Product Top Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
+      <div className="grid w-full min-w-0 grid-cols-1 gap-12 mb-20 lg:grid-cols-2 lg:gap-12">
         {/* Left: Images */}
-        <div className="space-y-4">
-          <div className="relative aspect-[3/4] bg-gray-100 rounded-sm overflow-hidden">
-             <img
+        <div className="min-w-0 space-y-4">
+          <div className="relative aspect-[3/4] w-full max-w-full bg-gray-100 rounded-sm overflow-hidden">
+            <img
               src={getProductImage(product.name, images[0])}
               alt={product.name}
-              className="w-full h-full object-cover"
+              className="h-full w-full max-w-full object-cover"
             />
           </div>
           <div className="grid grid-cols-4 gap-4">
@@ -62,7 +76,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
         </div>
 
         {/* Right: Info */}
-        <div className="flex flex-col">
+        <div className="flex min-w-0 flex-col">
           <div className="mb-2 flex items-center space-x-2">
              <span className="text-xs font-bold uppercase tracking-wider text-velora-wine">{product.category}</span>
              {product.tags && <span className="text-xs text-gray-400">| {product.tags}</span>}
@@ -109,7 +123,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
             <button className="pb-4 border-b-2 border-transparent text-gray-400 hover:text-black font-medium text-sm uppercase tracking-wide">Specifications</button>
             <button className="pb-4 border-b-2 border-transparent text-gray-400 hover:text-black font-medium text-sm uppercase tracking-wide">Reviews</button>
          </div>
-         <div className="prose max-w-none text-gray-600">
+         <div className="max-w-none text-gray-600">
             <p>
               Experience the pinnacle of craftsmanship with our {product.name}. Designed in our Milan studio and brought to life by expert artisans, 
               this piece embodies the VELORA philosophy of timeless elegance. The fabric is sourced ethically from premium mills in Italy, 

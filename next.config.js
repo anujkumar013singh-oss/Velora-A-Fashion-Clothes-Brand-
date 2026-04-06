@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Bundle SQLite DB + migrations with serverless output (Vercel) so Prisma can open the file at runtime.
+  experimental: {
+    serverComponentsExternalPackages: ["@prisma/client"],
+    outputFileTracingIncludes: {
+      "/*": ["./prisma/**/*"],
+    },
+  },
   images: {
     remotePatterns: [
       {

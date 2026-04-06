@@ -238,10 +238,7 @@ async function main() {
     allProducts.push(generateProduct(false, collections[i % 4].id))
   }
 
-  // Batch insert
-  for (const p of allProducts) {
-    await prisma.product.create({ data: p })
-  }
+  await prisma.product.createMany({ data: allProducts })
 
   // Learning Modules (4 boxes as requested)
   const learningModules = [
@@ -271,9 +268,7 @@ async function main() {
     }
   ];
 
-  for (const module of learningModules) {
-    await prisma.learningModule.create({ data: module })
-  }
+  await prisma.learningModule.createMany({ data: learningModules })
 
   console.log('Seeding finished.')
 }

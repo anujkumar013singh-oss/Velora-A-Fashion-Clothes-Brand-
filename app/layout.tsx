@@ -14,18 +14,23 @@ export const metadata: Metadata = {
   description: "Discover premium fashion at VELORA.",
 };
 
+export const viewport = {
+  width: "device-width" as const,
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased bg-velora-white text-velora-black`}>
+    <html lang="en" className="h-full">
+      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased bg-velora-white text-velora-black min-h-full w-full`}>
         <CartProvider>
           <Header />
           <CartSidebar />
-          <main className="min-h-screen">
+          <main className="min-h-screen w-full min-w-0 max-w-[100vw] overflow-x-hidden">
             {children}
           </main>
           <Footer />
