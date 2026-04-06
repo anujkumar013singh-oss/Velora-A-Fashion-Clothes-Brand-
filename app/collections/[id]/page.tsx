@@ -1,7 +1,7 @@
 "use client";
 
 import ProductGrid from "@/components/product/ProductGrid";
-import Image from "next/image";
+import { getProductImage } from "@/lib/image-mapping";
 
 export default function CollectionDetailPage() {
   // Static data so it never crashes
@@ -15,12 +15,10 @@ export default function CollectionDetailPage() {
   return (
     <div className="pt-24 pb-20 container mx-auto px-4">
       <div className="relative w-full h-[40vh] md:h-[50vh] rounded-sm overflow-hidden mb-8">
-        <Image 
-          src={collection.image} 
-          alt={collection.name} 
-          fill 
-          className="object-cover"
-          priority 
+        <img
+          src={getProductImage(collection.name, collection.image)}
+          alt={collection.name}
+          className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
           <div className="text-center text-white p-6">
